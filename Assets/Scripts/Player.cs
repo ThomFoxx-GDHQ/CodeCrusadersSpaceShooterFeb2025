@@ -14,6 +14,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float _leftBound;
     [SerializeField] private float _rightBound;
 
+    [SerializeField] private LaserPool _laserPool;
+    [SerializeField]
+    private float _fireRate = 1f;
+    private float _whenCanLaserFire = -1;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -25,7 +30,14 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
         CalculateBoundary();
-        
+
+        if (Input.GetKeyDown(KeyCode.Space) && _whenCanLaserFire < Time.time)
+        {
+            _laserPool.GetLaser(transform.position);
+            //go.transform.parent = _laserContainer;
+
+            _whenCanLaserFire = Time.time + _fireRate;
+        }
     }
 
     private void CalculateMovement()
