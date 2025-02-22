@@ -15,9 +15,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float _rightBound;
 
     [SerializeField] private LaserPool _laserPool;
-    [SerializeField]
-    private float _fireRate = 1f;
+    [SerializeField] private float _laserFireRate = 1f;
     private float _whenCanLaserFire = -1;
+    [SerializeField] private float _waveFireRate = 1f;
+    private float _whenCanWaveFire = -1;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,12 +32,13 @@ public class Player : MonoBehaviour
         CalculateMovement();
         CalculateBoundary();
 
-        if (Input.GetKeyDown(KeyCode.Space) && _whenCanLaserFire < Time.time)
+        if (Input.GetKey(KeyCode.Space) && _whenCanLaserFire < Time.time)
         {
-            _laserPool.GetLaser(transform.position);
-            //go.transform.parent = _laserContainer;
-
-            _whenCanLaserFire = Time.time + _fireRate;
+           FireLaser();
+        }
+        if (Input.GetKey(KeyCode.RightAlt) && _whenCanWaveFire < Time.time)
+        {
+            FireWave();
         }
     }
 
@@ -72,5 +74,20 @@ public class Player : MonoBehaviour
         }
 
         transform.position = _position;
+    }
+
+    private void FireLaser()
+    {
+        _laserPool.GetLaser(transform.position);
+        //go.transform.parent = _laserContainer;
+
+        _whenCanLaserFire = Time.time + _laserFireRate;
+    }
+
+    private void FireWave()
+    {
+        _laserPool.GetWave(transform.position);
+
+        _whenCanWaveFire = Time.time + _waveFireRate;
     }
 }
