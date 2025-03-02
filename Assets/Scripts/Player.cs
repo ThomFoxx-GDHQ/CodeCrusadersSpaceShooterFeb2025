@@ -17,13 +17,18 @@ public class Player : MonoBehaviour
     [SerializeField] private LaserPool _laserPool;
     [SerializeField] private float _laserFireRate = 1f;
     private float _whenCanLaserFire = -1;
+    [SerializeField] private Vector3 _laserOffset = Vector3.zero;
     [SerializeField] private float _waveFireRate = 1f;
     private float _whenCanWaveFire = -1;
+
+    private int _lives = 3;
+    private SpawnManager _spawnManager;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        _spawnManager = GameObject.Find("Managers").GetComponent<SpawnManager>();
     }
 
     // Update is called once per frame
@@ -36,7 +41,7 @@ public class Player : MonoBehaviour
         {
            FireLaser();
         }
-        if (Input.GetKey(KeyCode.RightAlt) && _whenCanWaveFire < Time.time)
+        if (Input.GetKey(KeyCode.RightShift) && _whenCanWaveFire < Time.time)
         {
             FireWave();
         }
@@ -78,7 +83,7 @@ public class Player : MonoBehaviour
 
     private void FireLaser()
     {
-        _laserPool.GetLaser(transform.position);
+        _laserPool.GetLaser(transform.position + _laserOffset);
         //go.transform.parent = _laserContainer;
 
         _whenCanLaserFire = Time.time + _laserFireRate;
@@ -89,5 +94,16 @@ public class Player : MonoBehaviour
         _laserPool.GetWave(transform.position);
 
         _whenCanWaveFire = Time.time + _waveFireRate;
+    }
+
+    public void Damage()
+    {
+        _lives--;
+
+        if (_lives <=0)
+        {
+            _spawnManager.OnPlayerDeath();
+            Destroy(this.gameObject);
+        }
     }
 }

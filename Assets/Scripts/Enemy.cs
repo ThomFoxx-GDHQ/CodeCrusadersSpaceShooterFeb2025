@@ -27,11 +27,18 @@ public class Enemy : MonoBehaviour
         }    
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.CompareTag("Player"))
+        {
+            other.GetComponent<Player>()?.Damage();
+            Destroy(this.gameObject);
+        }
         if (other.CompareTag("Projectile"))
         {
-            Destroy(other.gameObject);
+            //Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
+            other.transform.localPosition = Vector3.zero;
             Destroy(this.gameObject);
         }
     }
