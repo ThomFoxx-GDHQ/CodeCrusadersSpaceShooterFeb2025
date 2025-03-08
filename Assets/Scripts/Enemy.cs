@@ -10,10 +10,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _leftBound;
     [SerializeField] private float _rightBound;
 
+    private SpawnManager _spawnManager;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        _spawnManager = GameObject.FindAnyObjectByType<SpawnManager>();
     }
 
     // Update is called once per frame
@@ -36,9 +38,12 @@ public class Enemy : MonoBehaviour
         }
         if (other.CompareTag("Projectile"))
         {
-            //Destroy(other.gameObject);
+            //Reset projectile Object to Pool
             other.gameObject.SetActive(false);
             other.transform.localPosition = Vector3.zero;
+            
+            _spawnManager.SpawnPowerup(transform.position);
+
             Destroy(this.gameObject);
         }
     }

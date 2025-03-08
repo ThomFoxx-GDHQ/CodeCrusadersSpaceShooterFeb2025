@@ -5,10 +5,12 @@ public class LaserPool : MonoBehaviour
 {
     [SerializeField] GameObject _laserPrefab;
     [SerializeField] GameObject _wavePrefab;
+    [SerializeField] GameObject _tripleshotPrefab;
     [SerializeField] int _poolSize = 10;
     [SerializeField] Transform _poolContainer;
     private List<GameObject> _poolLaserObjects = new List<GameObject>();
     private List<GameObject> _poolWaveObjects = new List<GameObject>();
+    private List<GameObject> _poolTripleShotObjects = new List<GameObject>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,11 +21,22 @@ public class LaserPool : MonoBehaviour
             GameObject laser = Instantiate(_laserPrefab, transform.position, Quaternion.identity, _poolContainer);
             laser.SetActive(false);
             _poolLaserObjects.Add(laser);
+        }
 
+        for (int i = 0; i < _poolSize; i++)
+        {
             //Spawn Wave into Pool
             GameObject wave = Instantiate(_wavePrefab, transform.position, Quaternion.identity, _poolContainer);
             wave.SetActive(false);
             _poolWaveObjects.Add(wave);
+        }
+
+        for (int i=0; i < _poolSize; i++)
+        { 
+            //Spawn Tripleshot into Pool
+            GameObject tripleshot = Instantiate(_tripleshotPrefab, transform.position, Quaternion.identity, _poolContainer);
+            tripleshot.SetActive(false);
+            _poolTripleShotObjects.Add(tripleshot);
         }
     }
 
@@ -56,4 +69,20 @@ public class LaserPool : MonoBehaviour
         GameObject go = Instantiate(_wavePrefab, spawnPOS, Quaternion.identity, _poolContainer);
         _poolWaveObjects.Add(go);
     }
+
+    public void GetTripleShot(Vector3 spawnPOS)
+    {
+        foreach (GameObject tripleshot in _poolTripleShotObjects)
+        {
+            if (!tripleshot.activeInHierarchy)
+            {
+                tripleshot.transform.position = spawnPOS;
+                tripleshot.SetActive(true);
+                return;
+            }
+        }
+        GameObject go = Instantiate(_tripleshotPrefab, spawnPOS, Quaternion .identity, _poolContainer);
+        _poolTripleShotObjects.Add(go);
+    }
+
 }

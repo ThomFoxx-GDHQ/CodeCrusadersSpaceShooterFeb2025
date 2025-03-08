@@ -9,6 +9,7 @@ public class SpawnManager : MonoBehaviour
     private WaitForSeconds _spawnDelayTimer;
     [SerializeField] private float _spawnTime;
     private bool _isSpawning = true;
+    [SerializeField] private GameObject[] _powerupPrefabs;
 
     private void Start()
     {
@@ -31,5 +32,10 @@ public class SpawnManager : MonoBehaviour
     public void OnPlayerDeath()
     {
         _isSpawning = false;
+    }
+
+    public void SpawnPowerup(Vector3 currentPOS)
+    {
+        Instantiate(_powerupPrefabs[0], currentPOS, Quaternion.identity);
     }
 }

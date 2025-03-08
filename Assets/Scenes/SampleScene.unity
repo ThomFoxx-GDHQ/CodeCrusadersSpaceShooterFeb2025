@@ -272,7 +272,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &333447089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,6 +287,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyPrefab: {fileID: 6803865821457454756, guid: 05c37b4ee356c4f4fb0231e81dde5a2e, type: 3}
   _spawnTime: 3
+  _powerupPrefabs:
+  - {fileID: 2043986888259728560, guid: ddedb626fe2321f45af12610148719d4, type: 3}
 --- !u!4 &333447090
 Transform:
   m_ObjectHideFlags: 0
@@ -463,6 +465,7 @@ MonoBehaviour:
   _laserFireRate: 1
   _laserOffset: {x: 1.22, y: 0, z: 0}
   _waveFireRate: 1
+  _isTripleShotActive: 0
 --- !u!4 &643628164
 Transform:
   m_ObjectHideFlags: 0
@@ -613,7 +616,7 @@ GameObject:
   - component: {fileID: 965105911}
   m_Layer: 0
   m_Name: LaserContainer
-  m_TagString: Untagged
+  m_TagString: Container
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -647,6 +650,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _laserPrefab: {fileID: 621839478022365595, guid: 70f39774a9840914c965eecd2879b19d, type: 3}
   _wavePrefab: {fileID: 376333614225543664, guid: 5508570b8af7e6446adedbe3dc8db9d7, type: 3}
+  _tripleshotPrefab: {fileID: 2081499693003120608, guid: 58b02fd97f4ef81449d85096abb1a6cd, type: 3}
   _poolSize: 10
   _poolContainer: {fileID: 965105910}
 --- !u!1 &1434982351

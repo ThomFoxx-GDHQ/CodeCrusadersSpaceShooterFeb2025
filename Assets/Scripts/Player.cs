@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector3 _laserOffset = Vector3.zero;
     [SerializeField] private float _waveFireRate = 1f;
     private float _whenCanWaveFire = -1;
+    [SerializeField] private bool _isTripleShotActive = false;
 
     private int _lives = 3;
     private SpawnManager _spawnManager;
@@ -83,8 +84,15 @@ public class Player : MonoBehaviour
 
     private void FireLaser()
     {
-        _laserPool.GetLaser(transform.position + _laserOffset);
-        //go.transform.parent = _laserContainer;
+        if (_isTripleShotActive)
+        {
+            _laserPool.GetTripleShot(transform.position);
+        }
+        else
+        {
+            _laserPool.GetLaser(transform.position + _laserOffset);
+            //go.transform.parent = _laserContainer;
+        }
 
         _whenCanLaserFire = Time.time + _laserFireRate;
     }
@@ -105,5 +113,10 @@ public class Player : MonoBehaviour
             _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
         }
+    }
+
+    public void ActivateTripelshot()
+    {
+        _isTripleShotActive = true;
     }
 }
