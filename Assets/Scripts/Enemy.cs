@@ -40,7 +40,8 @@ public class Enemy : MonoBehaviour
         {
             //Reset projectile Object to Pool
             other.gameObject.SetActive(false);
-            other.transform.localPosition = Vector3.zero;
+            if (other.transform.parent.CompareTag("Container"))
+                other.transform.localPosition = Vector3.zero;
             
             _spawnManager.SpawnPowerup(transform.position);
 

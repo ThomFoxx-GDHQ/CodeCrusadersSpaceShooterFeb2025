@@ -78,6 +78,11 @@ public class LaserPool : MonoBehaviour
             {
                 tripleshot.transform.position = spawnPOS;
                 tripleshot.SetActive(true);
+                
+                for(int i = 0; i<tripleshot.transform.childCount; i++)
+                {
+                    tripleshot.transform.GetChild(i).gameObject.SetActive(true);
+                }
                 return;
             }
         }

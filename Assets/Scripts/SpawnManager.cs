@@ -36,6 +36,8 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnPowerup(Vector3 currentPOS)
     {
+        //Let's set this up to have a random chance to spawn when called.
+
         Instantiate(_powerupPrefabs[0], currentPOS, Quaternion.identity);
     }
 }
