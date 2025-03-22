@@ -9,6 +9,7 @@ public class SpawnManager : MonoBehaviour
     private WaitForSeconds _spawnDelayTimer;
     [SerializeField] private float _spawnTime;
     private bool _isSpawning = true;
+    [SerializeField] float _powerupSpawnChance = .5f;
     [SerializeField] private GameObject[] _powerupPrefabs;
 
     private void Start()
@@ -36,8 +37,12 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnPowerup(Vector3 currentPOS)
     {
-        //Let's set this up to have a random chance to spawn when called.
+        float spawnChance = Random.Range(0f, 1f);
 
-        Instantiate(_powerupPrefabs[0], currentPOS, Quaternion.identity);
+        if (spawnChance <= _powerupSpawnChance)
+        {
+            int randomPowerup = Random.Range(0, _powerupPrefabs.Length);
+            Instantiate(_powerupPrefabs[randomPowerup], currentPOS, Quaternion.identity);
+        }
     }
 }

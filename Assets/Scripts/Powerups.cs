@@ -5,7 +5,9 @@ public class Powerups : MonoBehaviour
     public enum PowerupType
     {
         None,
-        TripleShot
+        TripleShot,
+        Speed,
+        Shield
     }
 
     [SerializeField] private PowerupType _powerupID;
@@ -28,6 +30,12 @@ public class Powerups : MonoBehaviour
                     break;
                 case PowerupType.TripleShot:
                     player.ActivateTripelshot();
+                    break;
+                case PowerupType.Speed:
+                    player.ActivateSpeedBoost();
+                    break;
+                case PowerupType.Shield:
+                    player.ActivateShield();
                     break;
                 default:
                     break;

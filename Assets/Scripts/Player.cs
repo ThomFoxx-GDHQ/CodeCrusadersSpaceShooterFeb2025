@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -24,6 +25,12 @@ public class Player : MonoBehaviour
 
     private int _lives = 3;
     private SpawnManager _spawnManager;
+
+    [SerializeField] private float _speedBoostMultipler = 2.5f;
+    private float _speedMultiplier = 1;
+
+    [SerializeField] private GameObject _shieldVisual;
+    private bool _isShieldActive;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -55,7 +62,7 @@ public class Player : MonoBehaviour
 
         _direction = new Vector3(_horizontalInput, _verticalInput, 0);
 
-        transform.Translate(_direction * (_speed * Time.deltaTime));
+        transform.Translate(_direction * (_speed * _speedMultiplier * Time.deltaTime));
     }
 
     private void CalculateBoundary()
@@ -106,6 +113,13 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
+        if (_isShieldActive)
+        {
+            _isShieldActive = false;
+            _shieldVisual.SetActive(false);
+            return;
+        }
+
         _lives--;
 
         if (_lives <=0)
@@ -118,5 +132,31 @@ public class Player : MonoBehaviour
     public void ActivateTripelshot()
     {
         _isTripleShotActive = true;
+        StartCoroutine(TripleShotPowerDownRoutine());
+    }
+
+    IEnumerator TripleShotPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5);
+        _isTripleShotActive = false;
+    }
+
+    public void ActivateSpeedBoost()
+    {
+        _speedMultiplier = _speedBoostMultipler;
+        StartCoroutine(SpeedBoostPowerDownRoutine());
+    }
+
+    IEnumerator SpeedBoostPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        _speedMultiplier = 1;
+    }
+
+    [ContextMenu("Shield Test")]
+    public void ActivateShield()
+    {
+        _isShieldActive = true;
+        _shieldVisual.SetActive(true);
     }
 }
