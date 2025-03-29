@@ -32,11 +32,18 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _shieldVisual;
     private bool _isShieldActive;
 
+    private int _score;
+    private UIManager _uiManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _spawnManager = GameObject.Find("Managers").GetComponent<SpawnManager>();
+        _spawnManager = GameObject.Find("Managers")?.GetComponent<SpawnManager>();
+        _uiManager = GameObject.Find("Managers")?.GetComponent<UIManager>();
+
+        _shieldVisual.SetActive(false);
+        _uiManager.UpdateScore(_score);
+        _uiManager.UpdateLives(_lives);
     }
 
     // Update is called once per frame
@@ -121,6 +128,7 @@ public class Player : MonoBehaviour
         }
 
         _lives--;
+        _uiManager.UpdateLives(_lives);
 
         if (_lives <=0)
         {
@@ -153,10 +161,15 @@ public class Player : MonoBehaviour
         _speedMultiplier = 1;
     }
 
-    [ContextMenu("Shield Test")]
     public void ActivateShield()
     {
         _isShieldActive = true;
         _shieldVisual.SetActive(true);
+    }
+
+    public void AddScore(int points)
+    {
+        _score += points;
+        _uiManager.UpdateScore(_score);
     }
 }

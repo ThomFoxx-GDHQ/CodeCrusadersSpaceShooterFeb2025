@@ -11,11 +11,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _rightBound;
 
     private SpawnManager _spawnManager;
+    private Player _player;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _spawnManager = GameObject.FindAnyObjectByType<SpawnManager>();
+        _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -33,7 +35,11 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<Player>()?.Damage();
+            if (_player != null)
+            {
+                _player.Damage();
+                _player.AddScore(5);
+            }
             Destroy(this.gameObject);
         }
         if (other.CompareTag("Projectile"))
@@ -44,6 +50,8 @@ public class Enemy : MonoBehaviour
                 other.transform.localPosition = Vector3.zero;
             
             _spawnManager.SpawnPowerup(transform.position);
+            if (_player !=null) 
+                _player.AddScore(10);
 
             Destroy(this.gameObject);
         }
