@@ -139,6 +139,7 @@ MonoBehaviour:
   _bottomBound: -5
   _leftBound: -12
   _rightBound: 12
+  _explosionPrefab: {fileID: 761556992115850231, guid: 3b14b2111234afa41a0fa6125f5856d4, type: 3}
 --- !u!50 &223573702448218171
 Rigidbody2D:
   serializedVersion: 5

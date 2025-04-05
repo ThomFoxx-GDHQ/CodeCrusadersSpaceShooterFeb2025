@@ -13,6 +13,8 @@ public class Enemy : MonoBehaviour
     private SpawnManager _spawnManager;
     private Player _player;
 
+    [SerializeField] private GameObject _explosionPrefab;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -40,7 +42,7 @@ public class Enemy : MonoBehaviour
                 _player.Damage();
                 _player.AddScore(5);
             }
-            Destroy(this.gameObject);
+            OnEnemyDeath();
         }
         if (other.CompareTag("Projectile"))
         {
@@ -53,7 +55,14 @@ public class Enemy : MonoBehaviour
             if (_player !=null) 
                 _player.AddScore(10);
 
-            Destroy(this.gameObject);
+            OnEnemyDeath();
         }
+    }
+
+    private void OnEnemyDeath()
+    {
+        Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+
+        Destroy(this.gameObject);
     }
 }

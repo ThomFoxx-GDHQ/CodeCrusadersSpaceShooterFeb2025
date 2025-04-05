@@ -35,6 +35,8 @@ public class Player : MonoBehaviour
     private int _score;
     private UIManager _uiManager;
 
+    [SerializeField] private GameObject[] _damageEffects;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -42,6 +44,12 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Managers")?.GetComponent<UIManager>();
 
         _shieldVisual.SetActive(false);
+        
+        foreach (GameObject go in _damageEffects)
+        {
+            go.SetActive(false);
+        }
+
         _uiManager.UpdateScore(_score);
         _uiManager.UpdateLives(_lives);
     }
@@ -129,11 +137,21 @@ public class Player : MonoBehaviour
 
         _lives--;
         _uiManager.UpdateLives(_lives);
-
+        
         if (_lives <=0)
         {
             _spawnManager.OnPlayerDeath();
+           _uiManager.GameOver();
+            GameObject.Find("Managers").GetComponent<GameManager>()?.GameOver();
             Destroy(this.gameObject);
+        }
+        else if (_lives == 2)
+        {
+            _damageEffects[0].SetActive(true);
+        }
+        else if (_lives == 1)
+        {
+            _damageEffects[1].SetActive(true);
         }
     }
 
