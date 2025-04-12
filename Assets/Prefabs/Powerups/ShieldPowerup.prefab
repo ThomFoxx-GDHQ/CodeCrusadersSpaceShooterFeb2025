@@ -126,6 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _powerupID: 3
   _speed: 5
+  _powerSound: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
 --- !u!70 &1772702103998411787
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

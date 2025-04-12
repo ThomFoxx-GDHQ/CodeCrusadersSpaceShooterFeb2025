@@ -22,6 +22,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float _waveFireRate = 1f;
     private float _whenCanWaveFire = -1;
     [SerializeField] private bool _isTripleShotActive = false;
+    [SerializeField] private AudioClip _laserAudio;
+    [SerializeField] private AudioClip _waveAudio;
 
     private int _lives = 3;
     private SpawnManager _spawnManager;
@@ -36,6 +38,9 @@ public class Player : MonoBehaviour
     private UIManager _uiManager;
 
     [SerializeField] private GameObject[] _damageEffects;
+
+    [SerializeField] private bool _isDead = false;
+    [SerializeField] private AudioSource _audioSource;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -57,6 +62,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_isDead == true) return;
+
         CalculateMovement();
         CalculateBoundary();
 
@@ -116,12 +123,18 @@ public class Player : MonoBehaviour
             //go.transform.parent = _laserContainer;
         }
 
+        _audioSource.clip = _laserAudio;
+        _audioSource.Play();
+
         _whenCanLaserFire = Time.time + _laserFireRate;
     }
 
     private void FireWave()
     {
         _laserPool.GetWave(transform.position);
+
+        _audioSource.clip = _waveAudio;
+        _audioSource.Play();
 
         _whenCanWaveFire = Time.time + _waveFireRate;
     }
@@ -143,7 +156,10 @@ public class Player : MonoBehaviour
             _spawnManager.OnPlayerDeath();
            _uiManager.GameOver();
             GameObject.Find("Managers").GetComponent<GameManager>()?.GameOver();
-            Destroy(this.gameObject);
+            //Destroy(this.gameObject);
+            transform.GetChild(0).gameObject.SetActive(false);
+            GetComponent<Collider>().enabled = false;
+            _isDead = true;
         }
         else if (_lives == 2)
         {

@@ -12,6 +12,7 @@ public class Powerups : MonoBehaviour
 
     [SerializeField] private PowerupType _powerupID;
     [SerializeField] private float _speed = 5;
+    [SerializeField] private AudioClip _powerSound;
 
     private void Update()
     {
@@ -40,6 +41,7 @@ public class Powerups : MonoBehaviour
                 default:
                     break;
             }
+            AudioSource.PlayClipAtPoint(_powerSound, transform.position);
             Destroy(this.gameObject);
         }
     }
