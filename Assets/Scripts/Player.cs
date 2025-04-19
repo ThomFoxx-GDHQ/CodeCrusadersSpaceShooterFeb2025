@@ -31,6 +31,17 @@ public class Player : MonoBehaviour
     [SerializeField] private float _speedBoostMultipler = 2.5f;
     private float _speedMultiplier = 1;
 
+    [SerializeField] private float _thrusterBoostMultiplier = 2.5f;
+    private float _thrusterMultiplier = 1;
+    private float _thrusterFuel = 0;
+    [SerializeField] private float _maxThrusterFuel = 100;
+    [SerializeField] private float _thrusterFuelRate = 5f;
+    private bool _thrusterActive = false;
+    [SerializeField] private float _thrusterFuelRefillRate = 2.5f;
+    private bool _canRefuel;
+    [SerializeField] private float _refuelTimer = 60f;
+    Coroutine _refuelRoutine;
+
     [SerializeField] private GameObject _shieldVisual;
     private bool _isShieldActive;
 
@@ -57,6 +68,8 @@ public class Player : MonoBehaviour
 
         _uiManager.UpdateScore(_score);
         _uiManager.UpdateLives(_lives);
+
+        _thrusterFuel = _maxThrusterFuel;
     }
 
     // Update is called once per frame
@@ -64,6 +77,7 @@ public class Player : MonoBehaviour
     {
         if (_isDead == true) return;
 
+        ThrusterDetection();
         CalculateMovement();
         CalculateBoundary();
 
@@ -77,6 +91,63 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void ThrusterDetection()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _thrusterFuel > 0)
+        {
+            _thrusterMultiplier = _thrusterBoostMultiplier;
+            _thrusterActive = true;
+            _canRefuel = false;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            _thrusterMultiplier = 1;
+            _thrusterActive = false;
+
+            if (_refuelRoutine != null)
+                StopCoroutine( _refuelRoutine);
+
+            _refuelRoutine = StartCoroutine(RefuelTimer());
+        }
+
+        if (_thrusterFuel <= 0)
+        {
+            _thrusterMultiplier = 1;
+            _thrusterActive = false;
+        }
+
+        if (_thrusterActive && _thrusterFuel > 0)
+        {
+            _thrusterFuel -= _thrusterFuelRate * Time.deltaTime;
+
+            if (_thrusterFuel < 0)
+            {                
+                _thrusterFuel = 0;
+                Debug.Log("Fuel Reset to 0.");
+            }
+
+            _uiManager.UpdateThruster(_thrusterFuel, _maxThrusterFuel);
+        }
+        else if (!_thrusterActive && _canRefuel && _thrusterFuel < _maxThrusterFuel)
+        {
+            _thrusterFuel += _thrusterFuelRefillRate * Time.deltaTime;
+
+            if (_thrusterFuel > _maxThrusterFuel)
+            {
+                _thrusterFuel = _maxThrusterFuel;
+                Debug.Log("Fuel Full Again.");
+            }
+            _uiManager.UpdateThruster(_thrusterFuel, _maxThrusterFuel);
+        }
+    }
+
+    IEnumerator RefuelTimer()
+    {
+        yield return new WaitForSeconds(_refuelTimer);
+        _canRefuel = true;
+        _refuelRoutine = null;
+    }
+
     private void CalculateMovement()
     {
         _horizontalInput = Input.GetAxis("Horizontal");
@@ -84,7 +155,7 @@ public class Player : MonoBehaviour
 
         _direction = new Vector3(_horizontalInput, _verticalInput, 0);
 
-        transform.Translate(_direction * (_speed * _speedMultiplier * Time.deltaTime));
+        transform.Translate(_direction * (_speed * _speedMultiplier * _thrusterMultiplier * Time.deltaTime));
     }
 
     private void CalculateBoundary()
@@ -205,5 +276,23 @@ public class Player : MonoBehaviour
     {
         _score += points;
         _uiManager.UpdateScore(_score);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Projectile"))
+        {
+            if (other.TryGetComponent<Laser>(out Laser laser))
+            {
+                if (laser.IsEnemyLaser)
+                {
+                    Damage();
+
+                    other.gameObject.SetActive(false);
+                    if (other.transform.parent.CompareTag("Container"))
+                        other.transform.localPosition = Vector3.zero;
+                }
+            }
+        }
     }
 }

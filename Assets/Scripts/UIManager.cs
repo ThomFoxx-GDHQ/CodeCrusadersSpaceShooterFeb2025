@@ -11,6 +11,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _gameOverText;
     [SerializeField] private string _gameOverMessage;
     [SerializeField] private TMP_Text _restartText;
+    [SerializeField] private Image _thrusterBar;
+
 
     public void UpdateScore(int score)
     {
@@ -24,6 +26,12 @@ public class UIManager : MonoBehaviour
         if (lives >= 0 && lives < _sprites.Length)
             _livesDisplay.sprite = _sprites[lives];
         else _livesDisplay.sprite = _sprites[0];
+    }
+
+    public void UpdateThruster(float thrusterValue, float thrusterMax)
+    {
+        float percent = thrusterValue / thrusterMax;
+        _thrusterBar.fillAmount = percent;
     }
 
     public void GameOver()

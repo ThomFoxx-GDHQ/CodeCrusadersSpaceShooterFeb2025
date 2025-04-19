@@ -70,6 +70,9 @@ public class Enemy : MonoBehaviour
         }
         if (other.CompareTag("Projectile"))
         {
+            if (other.TryGetComponent<Laser>(out Laser laser))
+                if (laser.IsEnemyLaser) return;
+
             //Reset projectile Object to Pool
             other.gameObject.SetActive(false);
             if (other.transform.parent.CompareTag("Container"))
