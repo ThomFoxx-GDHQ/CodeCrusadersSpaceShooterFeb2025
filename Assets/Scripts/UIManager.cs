@@ -12,6 +12,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private string _gameOverMessage;
     [SerializeField] private TMP_Text _restartText;
     [SerializeField] private Image _thrusterBar;
+    [SerializeField] private Image _shieldDisplay;
+    [SerializeField] private Sprite[] _shieldSprites;
 
 
     public void UpdateScore(int score)
@@ -32,6 +34,18 @@ public class UIManager : MonoBehaviour
     {
         float percent = thrusterValue / thrusterMax;
         _thrusterBar.fillAmount = percent;
+    }
+
+    public void UpdateShieldDisplay(int shieldValue)
+    {
+
+        if (shieldValue > 0 && shieldValue < _shieldSprites.Length)
+        {
+            _shieldDisplay.enabled = true;
+            _shieldDisplay.sprite = _shieldSprites[shieldValue];
+        }
+        if (shieldValue == 0)
+            _shieldDisplay.enabled = false;
     }
 
     public void GameOver()

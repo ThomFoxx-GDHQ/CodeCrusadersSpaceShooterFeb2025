@@ -43,7 +43,11 @@ public class Player : MonoBehaviour
     Coroutine _refuelRoutine;
 
     [SerializeField] private GameObject _shieldVisual;
+    private SpriteRenderer _shieldRenderer;
     private bool _isShieldActive;
+    private int _currentShieldPower = 0;
+    [SerializeField] private int _maxShieldPower = 3;
+    [SerializeField] private Color _shieldFullColor, _shieldHalfColor, _shieldDepletedColor;
 
     private int _score;
     private UIManager _uiManager;
@@ -59,8 +63,11 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Managers")?.GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Managers")?.GetComponent<UIManager>();
 
+        _shieldRenderer = _shieldVisual.GetComponent<SpriteRenderer>();
+        if (_shieldRenderer == null) Debug.LogError("Shield Renderer Not Found!");
         _shieldVisual.SetActive(false);
-        
+        _uiManager.UpdateShieldDisplay(_currentShieldPower);
+
         foreach (GameObject go in _damageEffects)
         {
             go.SetActive(false);
@@ -212,10 +219,34 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
+        if (_lives <= 0)
+            return;
+
         if (_isShieldActive)
         {
-            _isShieldActive = false;
-            _shieldVisual.SetActive(false);
+            _currentShieldPower--;
+            _uiManager.UpdateShieldDisplay(_currentShieldPower);
+            switch (_currentShieldPower)
+            {
+                case 2:
+                    _shieldRenderer.material.color = _shieldHalfColor;
+                    break;
+                case 1:
+                    _shieldRenderer.material.color = _shieldDepletedColor;
+                    break;
+                case 0:
+                    _shieldRenderer.material.color = _shieldFullColor;
+                    break;
+                default:
+                    break;
+            }
+
+            if (_currentShieldPower <= 0)
+            {
+                _isShieldActive = false;
+                _shieldVisual.SetActive(false);
+            }
+
             return;
         }
 
@@ -270,6 +301,9 @@ public class Player : MonoBehaviour
     {
         _isShieldActive = true;
         _shieldVisual.SetActive(true);
+        _currentShieldPower = _maxShieldPower;
+        _shieldRenderer.material.color = _shieldFullColor;
+        _uiManager.UpdateShieldDisplay(_currentShieldPower);
     }
 
     public void AddScore(int points)
