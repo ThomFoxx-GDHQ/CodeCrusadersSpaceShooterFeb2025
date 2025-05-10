@@ -24,6 +24,9 @@ public class Player : MonoBehaviour
     [SerializeField] private bool _isTripleShotActive = false;
     [SerializeField] private AudioClip _laserAudio;
     [SerializeField] private AudioClip _waveAudio;
+    [SerializeField] private AudioClip _emptySound;
+    [SerializeField] private int _maxLaserAmmo = 15;
+    private int _currentLaserAmmo;
 
     private int _lives = 3;
     private SpawnManager _spawnManager;
@@ -77,6 +80,8 @@ public class Player : MonoBehaviour
         _uiManager.UpdateLives(_lives);
 
         _thrusterFuel = _maxThrusterFuel;
+        _currentLaserAmmo = _maxLaserAmmo;
+        _uiManager.UpdateAmmoDisplay(_currentLaserAmmo);
     }
 
     // Update is called once per frame
@@ -90,7 +95,15 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space) && _whenCanLaserFire < Time.time)
         {
-           FireLaser();
+            if (_currentLaserAmmo > 0)
+                FireLaser();
+            else
+            {
+                _audioSource.clip = _emptySound;
+                _audioSource.Play();
+                _whenCanLaserFire = Time.time + _laserFireRate;
+            }
+
         }
         if (Input.GetKey(KeyCode.RightShift) && _whenCanWaveFire < Time.time)
         {
@@ -198,11 +211,12 @@ public class Player : MonoBehaviour
         else
         {
             _laserPool.GetLaser(transform.position + _laserOffset);
-            //go.transform.parent = _laserContainer;
         }
 
         _audioSource.clip = _laserAudio;
         _audioSource.Play();
+        _currentLaserAmmo--;
+        _uiManager.UpdateAmmoDisplay(_currentLaserAmmo);
 
         _whenCanLaserFire = Time.time + _laserFireRate;
     }
@@ -310,6 +324,16 @@ public class Player : MonoBehaviour
     {
         _score += points;
         _uiManager.UpdateScore(_score);
+    }
+
+    public void AddAmmo(int ammoAmount)
+    {
+        _currentLaserAmmo += ammoAmount;
+
+        if (_currentLaserAmmo > _maxLaserAmmo)
+            _currentLaserAmmo = _maxLaserAmmo;
+
+        _uiManager.UpdateAmmoDisplay(_currentLaserAmmo);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

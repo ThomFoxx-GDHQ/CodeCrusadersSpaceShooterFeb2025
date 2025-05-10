@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image _thrusterBar;
     [SerializeField] private Image _shieldDisplay;
     [SerializeField] private Sprite[] _shieldSprites;
+    [SerializeField] private TMP_Text _ammoDisplay;
 
 
     public void UpdateScore(int score)
@@ -46,6 +47,11 @@ public class UIManager : MonoBehaviour
         }
         if (shieldValue == 0)
             _shieldDisplay.enabled = false;
+    }
+
+    public void UpdateAmmoDisplay(int ammoValue)
+    {
+        _ammoDisplay.text = $"Ammo: {ammoValue}";
     }
 
     public void GameOver()
