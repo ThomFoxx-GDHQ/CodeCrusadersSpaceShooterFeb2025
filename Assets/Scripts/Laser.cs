@@ -11,7 +11,12 @@ public class Laser : MonoBehaviour
     private bool _moveParent;
     private bool _isEnemyLaser = false;
     private Vector3 _direction = Vector3.zero;
+    private Vector3 _localPostion;
 
+    private void Start()
+    {
+        _localPostion = transform.localPosition;
+    }
 
     // Update is called once per frame
     void Update()
@@ -67,6 +72,7 @@ public class Laser : MonoBehaviour
             foreach (var child in children)
             {
                 child.gameObject.SetActive(true);
+                child.transform.localPosition = child.GetSavedLocal;
             }
         }
         SetEnemyLaser(false);
@@ -82,4 +88,5 @@ public class Laser : MonoBehaviour
         get { return _isEnemyLaser; }
     }
 
+    public Vector3 GetSavedLocal => _localPostion;
 }

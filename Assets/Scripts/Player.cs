@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip _emptySound;
     [SerializeField] private int _maxLaserAmmo = 15;
     private int _currentLaserAmmo;
+    private bool _isSpreadShotActive = false;
 
     private int _lives = 3;
     private SpawnManager _spawnManager;
@@ -204,7 +205,11 @@ public class Player : MonoBehaviour
 
     private void FireLaser()
     {
-        if (_isTripleShotActive)
+        if ( _isSpreadShotActive)
+        {
+            _laserPool.GetSpreadShot(transform.position);
+        }
+        else if (_isTripleShotActive)
         {
             _laserPool.GetTripleShot(transform.position);
         }
@@ -274,7 +279,7 @@ public class Player : MonoBehaviour
             GameObject.Find("Managers").GetComponent<GameManager>()?.GameOver();
             //Destroy(this.gameObject);
             transform.GetChild(0).gameObject.SetActive(false);
-            GetComponent<Collider>().enabled = false;
+            //GetComponent<Collider>().enabled = false;
             _isDead = true;
         }
         else if (_lives == 2)
@@ -297,6 +302,18 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         _isTripleShotActive = false;
+    }
+
+    public void ActivateSpreadShot()
+    {
+        _isSpreadShotActive = true;
+        StartCoroutine(SpreadShotPowerDownRoutine());
+    }
+
+    IEnumerator SpreadShotPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5);
+        _isSpreadShotActive = false;
     }
 
     public void ActivateSpeedBoost()

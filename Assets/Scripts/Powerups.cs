@@ -8,7 +8,8 @@ public class Powerups : MonoBehaviour
         TripleShot,
         Speed,
         Shield,
-        Ammo
+        Ammo,
+        SpreadShot
     }
 
     [SerializeField] private PowerupType _powerupID;
@@ -25,7 +26,7 @@ public class Powerups : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-             Player player = other.GetComponent<Player>();
+            Player player = other.GetComponent<Player>();
 
             switch (_powerupID)
             {
@@ -42,6 +43,9 @@ public class Powerups : MonoBehaviour
                     break;
                 case PowerupType.Ammo:
                     player.AddAmmo(_powerupAmount);
+                    break;
+                case PowerupType.SpreadShot:
+                    player.ActivateSpreadShot();
                     break;
                 default:
                     break;
