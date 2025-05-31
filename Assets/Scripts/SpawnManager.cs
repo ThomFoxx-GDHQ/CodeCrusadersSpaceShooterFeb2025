@@ -24,7 +24,7 @@ public class SpawnManager : MonoBehaviour
         {
             _randomNumber = Random.Range(-5, 5);
             _spawnPOS.y = _randomNumber;
-            _spawnPOS.x = 12;
+            _spawnPOS.x = 15;
             Instantiate(_enemyPrefab, _spawnPOS, Quaternion.identity);
             yield return _spawnDelayTimer;
         }

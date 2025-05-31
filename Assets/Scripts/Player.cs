@@ -61,11 +61,14 @@ public class Player : MonoBehaviour
     [SerializeField] private bool _isDead = false;
     [SerializeField] private AudioSource _audioSource;
 
+    private CameraShake _cameraShake;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _spawnManager = GameObject.Find("Managers")?.GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Managers")?.GetComponent<UIManager>();
+        _cameraShake = Camera.main?.GetComponent<CameraShake>();
 
         _shieldRenderer = _shieldVisual.GetComponent<SpriteRenderer>();
         if (_shieldRenderer == null) Debug.LogError("Shield Renderer Not Found!");
@@ -271,6 +274,7 @@ public class Player : MonoBehaviour
 
         _lives--;
         _uiManager.UpdateLives(_lives);
+        _cameraShake.ShakeCamera();
         
         if (_lives <=0)
         {

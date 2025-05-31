@@ -21,6 +21,8 @@ public class Enemy : MonoBehaviour
     private LaserPool _laserPool;
     [Tooltip("X = Mininmum Fire Time, Y = Maximum Fire Time")]
     [SerializeField] private Vector2 _fireRateRange;
+    Animator _animator;
+    [SerializeField, Range(0,1)] float _waveEnemyChance;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,9 +30,21 @@ public class Enemy : MonoBehaviour
         _spawnManager = GameObject.FindAnyObjectByType<SpawnManager>();
         _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
         _laserContainer = GameObject.FindGameObjectWithTag("Container")?.transform;
+        _animator = transform.GetChild(0).GetComponent<Animator>();
+
         if (_laserContainer != null)
             _laserPool = _laserContainer.GetComponent<LaserPool>();
         else Debug.LogError("Laser Container is Null", this.gameObject);
+
+        float rng = Random.value;
+        if (rng <= _waveEnemyChance )
+        {
+            _animator.SetBool("IsWaveEnemy", true);
+            _animator.SetFloat("Offset", rng);
+            float rndDirection = Random.value;
+            if (rndDirection >= .5f)
+                _animator.SetInteger("Direction", -1);
+        }
     }
 
     // Update is called once per frame
