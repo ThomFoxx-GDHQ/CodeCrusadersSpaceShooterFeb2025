@@ -9,7 +9,8 @@ public class Powerups : MonoBehaviour
         Speed,
         Shield,
         Ammo,
-        SpreadShot
+        SpreadShot,
+        ReverseControls
     }
 
     [SerializeField] private PowerupType _powerupID;
@@ -46,6 +47,9 @@ public class Powerups : MonoBehaviour
                     break;
                 case PowerupType.SpreadShot:
                     player.ActivateSpreadShot();
+                    break;
+                case PowerupType.ReverseControls:
+                    player.ReverseControls();
                     break;
                 default:
                     break;

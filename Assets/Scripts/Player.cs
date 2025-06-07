@@ -62,6 +62,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
 
     private CameraShake _cameraShake;
+    private int _controlsModifier = 1;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -178,6 +179,7 @@ public class Player : MonoBehaviour
         _verticalInput = Input.GetAxis("Vertical");
 
         _direction = new Vector3(_horizontalInput, _verticalInput, 0);
+        _direction *= _controlsModifier;
 
         transform.Translate(_direction * (_speed * _speedMultiplier * _thrusterMultiplier * Time.deltaTime));
     }
@@ -355,6 +357,18 @@ public class Player : MonoBehaviour
             _currentLaserAmmo = _maxLaserAmmo;
 
         _uiManager.UpdateAmmoDisplay(_currentLaserAmmo);
+    }
+
+    public void ReverseControls()
+    {
+        _controlsModifier = -1;
+        StartCoroutine(ReverseControlsShutdown());
+    }
+
+    IEnumerator ReverseControlsShutdown()
+    {
+        yield return new WaitForSeconds(5);
+        _controlsModifier = 1;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

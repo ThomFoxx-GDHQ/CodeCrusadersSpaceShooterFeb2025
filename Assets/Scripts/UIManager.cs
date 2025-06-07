@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image _shieldDisplay;
     [SerializeField] private Sprite[] _shieldSprites;
     [SerializeField] private TMP_Text _ammoDisplay;
-
+    [SerializeField] private TMP_Text _waveDisplay;
 
     public void UpdateScore(int score)
     {
@@ -82,5 +82,10 @@ public class UIManager : MonoBehaviour
                 _gameOverText.gameObject.SetActive(true);
             }
         }
+    }
+
+    public void UpdateWaveDisplay(int waveNumber)
+    {
+        _waveDisplay.text = $"Wave: #{waveNumber}";
     }
 }

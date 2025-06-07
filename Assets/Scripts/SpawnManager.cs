@@ -11,21 +11,49 @@ public class SpawnManager : MonoBehaviour
     private bool _isSpawning = true;
     [SerializeField] float _powerupSpawnChance = .5f;
     [SerializeField] private GameObject[] _powerupPrefabs;
+    [SerializeField] private Transform _enemyContainer;
+    int _waveCounter;
+    [SerializeField] int _waveCountMultiplier = 5;
+    int _enemiesSpawned = 0;
+    int _enemiesInWave = 0;
+    [SerializeField] UIManager _uiManager;
 
     private void Start()
     {
         _spawnDelayTimer = new WaitForSeconds(_spawnTime);
-        StartCoroutine(EnemySpawnRoutine());
+
+        _waveCounter = 1;
+        StartCoroutine(WaveSystemRoutine());
+    }
+
+    IEnumerator WaveSystemRoutine()
+    {
+        while (_isSpawning)
+        {
+            _uiManager.UpdateWaveDisplay(_waveCounter);
+            _enemiesInWave = _waveCounter * _waveCountMultiplier;
+
+            yield return StartCoroutine(EnemySpawnRoutine());
+
+            while (_enemyContainer.childCount > 0)
+            {
+                yield return new WaitForSeconds(5f);
+            }
+            _waveCounter++;
+        }
     }
 
     IEnumerator EnemySpawnRoutine()
     {
-        while (_isSpawning == true)
+        _enemiesSpawned = 0;
+
+        while (_isSpawning == true && _enemiesSpawned < _enemiesInWave)
         {
             _randomNumber = Random.Range(-5, 5);
             _spawnPOS.y = _randomNumber;
             _spawnPOS.x = 15;
-            Instantiate(_enemyPrefab, _spawnPOS, Quaternion.identity);
+            Instantiate(_enemyPrefab, _spawnPOS, Quaternion.identity, _enemyContainer);
+            _enemiesSpawned++;
             yield return _spawnDelayTimer;
         }
     }
