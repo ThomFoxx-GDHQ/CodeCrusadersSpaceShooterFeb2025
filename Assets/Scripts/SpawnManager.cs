@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] private GameObject _enemyPrefab;
+    [SerializeField] private GameObject[] _enemyPrefabs;
     private float _randomNumber;
+    private int _randomEnemy;
     private Vector3 _spawnPOS = Vector3.zero;
     private WaitForSeconds _spawnDelayTimer;
     [SerializeField] private float _spawnTime;
@@ -49,10 +50,11 @@ public class SpawnManager : MonoBehaviour
 
         while (_isSpawning == true && _enemiesSpawned < _enemiesInWave)
         {
+            _randomEnemy = Random.Range(0, _enemyPrefabs.Length);
             _randomNumber = Random.Range(-5, 5);
             _spawnPOS.y = _randomNumber;
             _spawnPOS.x = 15;
-            Instantiate(_enemyPrefab, _spawnPOS, Quaternion.identity, _enemyContainer);
+            Instantiate(_enemyPrefabs[_randomEnemy], _spawnPOS, Quaternion.identity, _enemyContainer);
             _enemiesSpawned++;
             yield return _spawnDelayTimer;
         }

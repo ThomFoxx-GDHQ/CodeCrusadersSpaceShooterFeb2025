@@ -100,7 +100,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnEnemyDeath()
+    public void OnEnemyDeath()
     {
         Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
 
