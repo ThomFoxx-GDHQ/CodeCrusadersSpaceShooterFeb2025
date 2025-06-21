@@ -226,7 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73df286631993fd4ca51f788b7f036a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 1.5
+  _speed: 3
   _bombPrefab: {fileID: 7695005895304942626, guid: 29a0e88c61048e64693cca1d92d742e4, type: 3}
   _dropPoints:
   - {fileID: 3914562050236134094}

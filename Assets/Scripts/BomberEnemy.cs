@@ -7,12 +7,12 @@ public class BomberEnemy : MonoBehaviour
     [SerializeField] Transform[] _dropPoints;
     float _timer = 1;
     int _randDropPoint = 0;
-    Transform _enemyContainer;
+    Transform _bombContainer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _enemyContainer = GameObject.Find("EnemyContainer").transform;
+        _bombContainer = GameObject.Find("BombContainer").transform;
     }
 
     // Update is called once per frame
@@ -35,8 +35,8 @@ public class BomberEnemy : MonoBehaviour
         if (_timer < Time.time)
         {
             _randDropPoint = Random.Range(0, _dropPoints.Length);
-            Instantiate(_bombPrefab, _dropPoints[_randDropPoint].position, Quaternion.identity, _enemyContainer);
-            _timer = Time.time + Random.Range(2, 5);
+            Instantiate(_bombPrefab, _dropPoints[_randDropPoint].position, Quaternion.identity, _bombContainer);
+            _timer = Time.time + Random.Range(1, 3);
         }
     }
 }

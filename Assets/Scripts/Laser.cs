@@ -66,14 +66,15 @@ public class Laser : MonoBehaviour
         }
         else
         {
-            transform.parent.gameObject.SetActive(false);
-            transform.parent.localPosition = Vector3.zero;
             Laser[] children = transform.parent.GetComponentsInChildren<Laser>();
             foreach (var child in children)
             {
                 child.gameObject.SetActive(true);
-                child.transform.localPosition = child.GetSavedLocal;
+                //child.transform.localPosition = child.GetSavedLocal;
+                child.transform.localPosition = Vector3.zero;
             }
+            transform.parent.gameObject.SetActive(false);
+            transform.parent.localPosition = Vector3.zero;
         }
         SetEnemyLaser(false);
     }

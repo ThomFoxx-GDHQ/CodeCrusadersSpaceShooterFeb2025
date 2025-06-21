@@ -23,6 +23,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Vector2 _fireRateRange;
     Animator _animator;
     [SerializeField, Range(0,1)] float _waveEnemyChance;
+    [SerializeField] float _shieldedChance = .5f;
+    [SerializeField] private GameObject _shieldVisualization;
+    private bool _isShieldActive;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -44,6 +47,13 @@ public class Enemy : MonoBehaviour
             float rndDirection = Random.value;
             if (rndDirection >= .5f)
                 _animator.SetInteger("Direction", -1);
+        }
+
+        rng = Random.value;
+        if (rng <= _shieldedChance )
+        {
+            _shieldVisualization.SetActive(true);
+            _isShieldActive = true;
         }
     }
 
@@ -75,33 +85,53 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (_player != null)
+            _player?.Damage();
+
+            if (!_isShieldActive)
             {
-                _player.Damage();
-                _player.AddScore(5);
+                if (_player != null)
+                {
+                    _player.AddScore(5);
+                }
+                OnEnemyDeath();
             }
-            OnEnemyDeath();
+            else
+            {
+                ShieldDeactivate();
+            }
         }
-        if (other.CompareTag("Projectile"))
+        else if (other.CompareTag("Projectile"))
         {
             if (other.TryGetComponent<Laser>(out Laser laser))
                 if (laser.IsEnemyLaser) return;
 
-            //Reset projectile Object to Pool
             other.gameObject.SetActive(false);
-            //if (other.transform.parent.CompareTag("Container"))
-            //    other.transform.localPosition = Vector3.zero;
-            
-            _spawnManager.SpawnPowerup(transform.position);
-            if (_player !=null) 
-                _player.AddScore(10);
 
-            OnEnemyDeath();
+            if (!_isShieldActive)
+            {
+                _spawnManager.SpawnPowerup(transform.position);
+                if (_player != null)
+                    _player.AddScore(10);
+
+                OnEnemyDeath();
+            }
+            else
+            {
+                ShieldDeactivate();
+            }
         }
+    }
+
+    private void ShieldDeactivate()
+    {
+        _shieldVisualization.SetActive(false);
+        _isShieldActive = false;
     }
 
     public void OnEnemyDeath()
     {
+        if (_isShieldActive) return;        
+
         Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
 
         Destroy(this.gameObject);
