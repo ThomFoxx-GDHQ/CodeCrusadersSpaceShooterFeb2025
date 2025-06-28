@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class SmartEnemy : MonoBehaviour
 {
     [SerializeField] private float _speed;
 
@@ -21,11 +21,11 @@ public class Enemy : MonoBehaviour
     private LaserPool _laserPool;
     [Tooltip("X = Mininmum Fire Time, Y = Maximum Fire Time")]
     [SerializeField] private Vector2 _fireRateRange;
-    Animator _animator;
-    [SerializeField, Range(0,1)] float _waveEnemyChance;
-    [SerializeField] float _shieldedChance = .5f;
-    [SerializeField] private GameObject _shieldVisualization;
-    private bool _isShieldActive;
+
+    private bool _isBehindPlayer = false;
+    [SerializeField] private Transform _model;
+    private Quaternion _modelDefaultRotation;
+    private float _rot_z = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,40 +33,43 @@ public class Enemy : MonoBehaviour
         _spawnManager = GameObject.FindAnyObjectByType<SpawnManager>();
         _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
         _laserContainer = GameObject.FindGameObjectWithTag("Container")?.transform;
-        _animator = transform.GetChild(0).GetComponent<Animator>();
 
         if (_laserContainer != null)
             _laserPool = _laserContainer.GetComponent<LaserPool>();
         else Debug.LogError("Laser Container is Null", this.gameObject);
 
-        float rng = Random.value;
-        if (rng <= _waveEnemyChance )
-        {
-            _animator.SetBool("IsWaveEnemy", true);
-            _animator.SetFloat("Offset", rng);
-            float rndDirection = Random.value;
-            if (rndDirection >= .5f)
-                _animator.SetInteger("Direction", -1);
-        }
-
-        rng = Random.value;
-        if (rng <= _shieldedChance )
-        {
-            _shieldVisualization.SetActive(true);
-            _isShieldActive = true;
-        }
+        _modelDefaultRotation = _model.rotation;
+        _rot_z = _modelDefaultRotation.eulerAngles.z;
     }
 
     // Update is called once per frame
     void Update()
     {
         CalculateMovement();
-        if (Time.time >= _canFireLaser)
+
+        if (_isBehindPlayer && Time.time >= _canFireLaser)
             FireLaser();
+
+        if (!_isBehindPlayer && transform.position.x < _player.transform.position.x)
+            TrackPlayerToggle(true);
+        else if (_isBehindPlayer && transform.position.x >= _player.transform.position.x)
+            TrackPlayerToggle(false);
     }
 
     private void CalculateMovement()
     {
+
+        if (_isBehindPlayer)
+        {
+            _rot_z = _modelDefaultRotation.eulerAngles.z + 180;
+            _model.rotation = Quaternion.Euler(0, 0, _rot_z);
+        }
+        else if (_model.rotation != _modelDefaultRotation)
+        {
+            _model.rotation = _modelDefaultRotation;
+            TrackPlayerToggle(false);
+        }
+
         transform.Translate(Vector3.left * (_speed * Time.deltaTime));
         if (transform.position.x < _leftBound)
         {
@@ -77,7 +80,13 @@ public class Enemy : MonoBehaviour
 
     private void FireLaser()
     {
-        _laserPool.GetLaser(_laserFirePosition.position, true, true);        
+        _laserPool.GetLaser(_laserFirePosition.position, true);
+        _canFireLaser = Time.time + Random.Range(_fireRateRange.x, _fireRateRange.y);
+    }
+
+    public void TrackPlayerToggle(bool toggle)
+    {
+        _isBehindPlayer = toggle;
         _canFireLaser = Time.time + Random.Range(_fireRateRange.x, _fireRateRange.y);
     }
 
@@ -87,18 +96,12 @@ public class Enemy : MonoBehaviour
         {
             _player?.Damage();
 
-            if (!_isShieldActive)
+            if (_player != null)
             {
-                if (_player != null)
-                {
-                    _player.AddScore(5);
-                }
-                OnEnemyDeath();
+                _player.AddScore(5);
             }
-            else
-            {
-                ShieldDeactivate();
-            }
+            OnEnemyDeath();
+
         }
         else if (other.CompareTag("Projectile"))
         {
@@ -107,31 +110,17 @@ public class Enemy : MonoBehaviour
 
             other.gameObject.SetActive(false);
 
-            if (!_isShieldActive)
-            {
-                _spawnManager.SpawnPowerup(transform.position);
-                if (_player != null)
-                    _player.AddScore(10);
+            _spawnManager.SpawnPowerup(transform.position);
+            if (_player != null)
+                _player.AddScore(10);
 
-                OnEnemyDeath();
-            }
-            else
-            {
-                ShieldDeactivate();
-            }
+            OnEnemyDeath();
+
         }
-    }
-
-    private void ShieldDeactivate()
-    {
-        _shieldVisualization.SetActive(false);
-        _isShieldActive = false;
     }
 
     public void OnEnemyDeath()
     {
-        if (_isShieldActive) return;        
-
         Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
 
         Destroy(this.gameObject);

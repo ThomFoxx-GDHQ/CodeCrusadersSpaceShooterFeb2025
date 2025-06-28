@@ -731,9 +731,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyPrefabs:
   - {fileID: 6803865821457454756, guid: 05c37b4ee356c4f4fb0231e81dde5a2e, type: 3}
+  - {fileID: 6550047205153250617, guid: 5ee38f280926aba40b3d1dbc9854190a, type: 3}
+  - {fileID: 4715124995659687325, guid: f14d53a4eef3d484fae5949e4f703308, type: 3}
   - {fileID: 6148518655273046917, guid: 88a97668eaa90d247bb82cd2d59b5994, type: 3}
+  _enemyWeights: 0a000000070000000700000005000000
   _spawnTime: 3
-  _powerupSpawnChance: 0.9
+  _powerupSpawnChance: 1
   _powerupPrefabs:
   - {fileID: 2043986888259728560, guid: ddedb626fe2321f45af12610148719d4, type: 3}
   - {fileID: 1350611630699224280, guid: 5407b1565a728fb49bb19ad4e0ab5b99, type: 3}
@@ -741,6 +744,7 @@ MonoBehaviour:
   - {fileID: 6513607645882676992, guid: 1d8b64fe3eb66834c94652fe89a6ad58, type: 3}
   - {fileID: 3157130634199869479, guid: 727a3ef74d0ab5e45935e61c1365975b, type: 3}
   - {fileID: 8147267844833495317, guid: 29992c958d1790342bed6d82e197098e, type: 3}
+  _powerupWeights: 0a0000000a0000000a000000140000000500000002000000
   _enemyContainer: {fileID: 231453264}
   _waveCountMultiplier: 5
   _uiManager: {fileID: 333447091}
@@ -2451,6 +2455,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1958671141}
   m_CullTransparentMesh: 1
+--- !u!1 &1991884002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1991884003}
+  m_Layer: 0
+  m_Name: BombContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1991884003
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991884002}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1992363622
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2525,10 +2560,11 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
-  - {fileID: 333447090}
   - {fileID: 965105910}
   - {fileID: 231453264}
+  - {fileID: 1991884003}
   - {fileID: 643628164}
   - {fileID: 1674573406}
   - {fileID: 688249509}
   - {fileID: 1664908276}
+  - {fileID: 333447090}

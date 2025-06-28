@@ -10,6 +10,7 @@ public class Laser : MonoBehaviour
     [SerializeField, Tooltip("This should be marked if the laser prefab is inside a Parent prefab Object.")]
     private bool _moveParent;
     private bool _isEnemyLaser = false;
+    private bool _isFireLeft = false;
     private Vector3 _direction = Vector3.zero;
     private Vector3 _localPostion;
 
@@ -26,7 +27,7 @@ public class Laser : MonoBehaviour
 
     void CalculateMovement()
     {
-        if (_isEnemyLaser)
+        if (_isEnemyLaser && _isFireLeft)
             _direction = Vector3.left;
         else 
             _direction = Vector3.right;
@@ -84,10 +85,16 @@ public class Laser : MonoBehaviour
         _isEnemyLaser = isEnemyLaser;
     }
 
+    public void SetFireDirectionLeft(bool isFireDirectionLeft)
+    {
+        _isFireLeft = isFireDirectionLeft;
+    }
+
     public bool IsEnemyLaser
     {
         get { return _isEnemyLaser; }
     }
+      
 
     public Vector3 GetSavedLocal => _localPostion;
 }

@@ -50,7 +50,7 @@ public class LaserPool : MonoBehaviour
         }
     }
 
-    public void GetLaser(Vector3 spawnPOS, bool isEnemyLaser = false)
+    public void GetLaser(Vector3 spawnPOS, bool isEnemyLaser = false, bool isFireLeft = false)
     {
         foreach (GameObject laser in _poolLaserObjects)
         {
@@ -59,12 +59,14 @@ public class LaserPool : MonoBehaviour
                 laser.transform.position = spawnPOS;
                 laser.SetActive(true);
                 laser.GetComponent<Laser>().SetEnemyLaser(isEnemyLaser);
+                laser.GetComponent<Laser>().SetFireDirectionLeft(isFireLeft);
                 return;
             }
         }
         GameObject go = Instantiate(_laserPrefab, spawnPOS, Quaternion.identity, _poolContainer);
         _poolLaserObjects.Add(go);
         go.GetComponent<Laser>().SetEnemyLaser(isEnemyLaser);
+        go.GetComponent<Laser>().SetFireDirectionLeft(isFireLeft);
     }
 
     public void GetWave(Vector3 spawnPOS)
