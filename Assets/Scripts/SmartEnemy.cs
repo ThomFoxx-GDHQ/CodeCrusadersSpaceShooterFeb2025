@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SmartEnemy : MonoBehaviour
@@ -26,6 +27,8 @@ public class SmartEnemy : MonoBehaviour
     [SerializeField] private Transform _model;
     private Quaternion _modelDefaultRotation;
     private float _rot_z = 0;
+    private bool _dodge = false;
+    private int _dodgeIndex = -1;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -70,7 +73,11 @@ public class SmartEnemy : MonoBehaviour
             TrackPlayerToggle(false);
         }
 
-        transform.Translate(Vector3.left * (_speed * Time.deltaTime));
+        if (_dodge)
+            transform.Translate(Vector3.up * (_speed * Time.deltaTime * _dodgeIndex));
+        else
+            transform.Translate(Vector3.left * (_speed * Time.deltaTime));
+
         if (transform.position.x < _leftBound)
         {
             float rng = Random.Range(_bottomBound, _topBound);
@@ -124,5 +131,19 @@ public class SmartEnemy : MonoBehaviour
         Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
 
         Destroy(this.gameObject);
+    }
+
+    public void DodgeLaser()
+    {
+        _dodge = true;
+        //pick a random number and if greater than .5 dodge up else dodge down
+        _dodgeIndex = Random.value >= .5f ? 1 : -1;
+        StartCoroutine(DodgeRoutine());
+    }
+
+    IEnumerator DodgeRoutine()
+    {
+        yield return new WaitForSeconds(.5f);
+        _dodge = false;
     }
 }

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Powerups : MonoBehaviour
@@ -17,10 +18,22 @@ public class Powerups : MonoBehaviour
     [SerializeField] private float _speed = 5;
     [SerializeField] private AudioClip _powerSound;
     [SerializeField] private int _powerupAmount = 0;
+    private GameObject _player;
+
+    private void Start()
+    {
+        _player = GameObject.FindFirstObjectByType<Player>().gameObject;    
+    }
 
     private void Update()
     {
-        transform.Translate(Vector3.left * (_speed * Time.deltaTime));
+        if (Input.GetKey(KeyCode.C))
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, Time.deltaTime * _speed * 2);
+        }
+        else
+            transform.Translate(Vector3.left * (_speed * Time.deltaTime));
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)
