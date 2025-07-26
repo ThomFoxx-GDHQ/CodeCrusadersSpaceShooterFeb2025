@@ -1317,6 +1317,9 @@ MonoBehaviour:
   _waveAudio: {fileID: 8300000, guid: ae488c5d02e9b964bb4c22bd1c5d97f5, type: 3}
   _emptySound: {fileID: 8300000, guid: 6e1ac6b143097fb47adc241cc42c5f3d, type: 3}
   _maxLaserAmmo: 15
+  _homingPrefab: {fileID: 4539409301235956009, guid: 912c9e5947a967940aa29f95bdd7b418, type: 3}
+  _canFireHoming: 1
+  _homingFireRate: 1
   _speedBoostMultipler: 2.5
   _thrusterBoostMultiplier: 2.5
   _maxThrusterFuel: 100

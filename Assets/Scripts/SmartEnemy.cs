@@ -99,6 +99,7 @@ public class SmartEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log($"Hit by {other.name}");
         if (other.CompareTag("Player"))
         {
             _player?.Damage();

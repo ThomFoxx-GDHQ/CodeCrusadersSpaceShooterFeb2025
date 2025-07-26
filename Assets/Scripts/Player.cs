@@ -28,6 +28,10 @@ public class Player : MonoBehaviour
     [SerializeField] private int _maxLaserAmmo = 15;
     private int _currentLaserAmmo;
     private bool _isSpreadShotActive = false;
+    [SerializeField] private GameObject _homingPrefab;
+    [SerializeField] private bool _canFireHoming;
+    [SerializeField] private float _homingFireRate = 1f;
+    private float _whenCanHomingFire = -1f;
 
     private int _lives = 3;
     private SpawnManager _spawnManager;
@@ -113,6 +117,11 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.RightShift) && _whenCanWaveFire < Time.time)
         {
             FireWave();
+        }
+        if (Input.GetKeyDown(KeyCode.M) && _whenCanHomingFire < Time.time && _canFireHoming)
+        {
+            _whenCanHomingFire = Time.time + _homingFireRate;
+            Instantiate(_homingPrefab, transform.position, Quaternion.identity);
         }
     }
 
